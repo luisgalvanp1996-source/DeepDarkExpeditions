@@ -1,3 +1,4 @@
+
 package dev.server404.deepdarkexpeditions;
 
 import org.bukkit.command.Command;
@@ -5,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.List;
 
 public final class DeepDarkExpeditions extends JavaPlugin {
@@ -12,30 +14,50 @@ public final class DeepDarkExpeditions extends JavaPlugin {
     private ConfigManager configManager;
     private WorldManager worldManager;
     private ExpeditionManager expeditionManager;
+    private PortalManager portalManager;
+    private MapManager mapManager;
 
     private static final List<String> DEPENDENCIES = List.of(
             "Denizen",
             "WorldEdit",
             "WorldGuard",
             "Multiverse-Core",
-            "Multiverse-Portals",
             "Chunky"
     );
 
     @Override
     public void onEnable() {
 
+        // Cargar configuración general.
         configManager = new ConfigManager(this);
         configManager.load();
 
+        // Preparar y cargar el registro de mapas.
+        File mapsFile = new File(getDataFolder(), "maps.yml");
+
+        if (!mapsFile.exists()) {
+            saveResource("maps.yml", false);
+        }
+
+        mapManager = new MapManager(this);
+        mapManager.load();
+
+        // Detectar los mundos configurados.
         worldManager = new WorldManager(this);
         worldManager.detectWorlds();
 
+        // Inicializar el administrador de expediciones.
         expeditionManager = new ExpeditionManager(this);
 
+        // Inicializar el sistema de portales.
+        portalManager = new PortalManager(this);
+        portalManager.register();
+
         getLogger().info("Configuración de expedición:");
-        getLogger().info("Mapas: "
+        getLogger().info("Mundos configurados: "
                 + configManager.getConfig().getStringList("worlds.available"));
+        getLogger().info("Mapas registrados: "
+                + mapManager.getMapCount());
         getLogger().info("Duración: "
                 + configManager.getInt("expedition.duration") + " minutos");
         getLogger().info("Rotación automática: "
@@ -68,6 +90,14 @@ public final class DeepDarkExpeditions extends JavaPlugin {
 
     public WorldManager getWorldManager() {
         return worldManager;
+    }
+
+    public PortalManager getPortalManager() {
+        return portalManager;
+    }
+
+    public MapManager getMapManager() {
+        return mapManager;
     }
 
     private void checkDependencies() {
@@ -118,6 +148,8 @@ public final class DeepDarkExpeditions extends JavaPlugin {
                         + expeditionManager.getStateName());
                 sender.sendMessage("§fVersión: §a" + getDescription().getVersion());
                 sender.sendMessage("§fServidor: §a" + getServer().getBukkitVersion());
+                sender.sendMessage("§fMapas registrados: §a"
+                        + mapManager.getMapCount());
 
                 sender.sendMessage("§fDependencias:");
 

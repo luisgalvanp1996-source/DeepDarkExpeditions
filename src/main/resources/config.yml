@@ -7,40 +7,86 @@ general:
   language: es
 
 worlds:
-  # Mundos físicos disponibles para las expediciones
   available:
     - deepdark_a
     - deepdark_b
 
-  # Mundo actualmente seleccionado
   active: ""
-
-  # Mundo que se prepara para la siguiente rotación
   standby: ""
 
 expedition:
-  # Activar el sistema de expediciones
   enabled: false
-
-  # Duración de una expedición en minutos
   duration: 120
-
-  # Tiempo de extracción en segundos
   extraction-time: 120
-
-  # Jugadores permitidos simultáneamente
   max-players: 20
-
-  # Evitar repetir el último mapa
   prevent-map-repeat: true
 
 rotation:
-  # Rotación automática
   enabled: false
-
-  # Tiempo entre expediciones, en minutos
   interval: 120
 
+# Sistema de portales propio de DeepDarkExpeditions
 portals:
   enabled: false
-  name: deepdark_entrada
+
+  # Tiempo de espera entre teletransportes por jugador
+  cooldown-ticks: 60
+
+  # Apariencia compartida por ambos portales
+  appearance:
+    frame-material: SCULK
+    interior-material: CYAN_STAINED_GLASS
+    particle: SCULK_CHARGE
+    particle-count: 24
+
+  # Efectos al atravesar cualquiera de los portales
+  transition:
+    nausea-duration-ticks: 40
+    nausea-amplifier: 0
+
+  # Portal de entrada desde el Overworld
+  entry:
+    world: world
+
+    region:
+      min:
+        x: 208
+        y: 64
+        z: 255
+      max:
+        x: 208
+        y: 68
+        z: 258
+
+    destination:
+      active-world-spawn: true
+      fallback:
+        x: 65.0
+        y: 64.0
+        z: -50.0
+        yaw: 0.0
+        pitch: 0.0
+
+  # Portal de regreso. La misma región en ambos mundos.
+  return:
+    worlds:
+      - deepdark_a
+      - deepdark_b
+
+    region:
+      min:
+        x: 64
+        y: 65
+        z: -48
+      max:
+        x: 67
+        y: 69
+        z: -48
+
+    destination:
+      world: world
+      x: 210.0
+      y: 65.0
+      z: 256.0
+      yaw: 0.0
+      pitch: 0.0
