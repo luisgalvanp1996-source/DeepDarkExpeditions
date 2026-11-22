@@ -1,0 +1,46 @@
+
+# DeepDarkExpeditions
+# Configuración principal
+
+general:
+  debug: false
+  language: es
+
+worlds:
+  # Mundos físicos disponibles para las expediciones
+  available:
+    - deepdark_a
+    - deepdark_b
+
+  # Mundo actualmente seleccionado
+  active: ""
+
+  # Mundo que se prepara para la siguiente rotación
+  standby: ""
+
+expedition:
+  # Activar el sistema de expediciones
+  enabled: false
+
+  # Duración de una expedición en minutos
+  duration: 120
+
+  # Tiempo de extracción en segundos
+  extraction-time: 120
+
+  # Jugadores permitidos simultáneamente
+  max-players: 20
+
+  # Evitar repetir el último mapa
+  prevent-map-repeat: true
+
+rotation:
+  # Rotación automática
+  enabled: false
+
+  # Tiempo entre expediciones, en minutos
+  interval: 120
+
+portals:
+  enabled: false
+  name: deepdark_entrada

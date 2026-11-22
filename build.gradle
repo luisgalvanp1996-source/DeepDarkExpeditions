@@ -1,0 +1,38 @@
+plugins {
+    id 'java'
+}
+
+group = 'dev.server404'
+version = '0.1.0'
+
+base {
+    archivesName = 'DeepDarkExpeditions'
+}
+
+repositories {
+    mavenCentral()
+
+    maven {
+        name = 'papermc'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:26.2.build.+'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 25
+}
+
+tasks.jar {
+    archiveBaseName = 'DeepDarkExpeditions'
+}
