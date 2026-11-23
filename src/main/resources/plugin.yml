@@ -1,5 +1,6 @@
+
 name: DeepDarkExpeditions
-version: 0.2.0
+version: 0.3.0
 main: dev.server404.deepdarkexpeditions.DeepDarkExpeditions
 api-version: '26.2'
 description: Sistema de expediciones rotativas Deep Dark
@@ -10,13 +11,12 @@ softdepend:
   - WorldEdit
   - WorldGuard
   - Multiverse-Core
-  - Multiverse-Portals
   - Chunky
 
 commands:
   dde:
     description: Comando principal de DeepDarkExpeditions
-    usage: /dde <version|status|transition>
+    usage: /dde
     permission: deepdarkexpeditions.admin
 
 permissions:
