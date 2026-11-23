@@ -1,5 +1,5 @@
 name: DeepDarkExpeditions
-version: 0.1.0
+version: 0.2.0
 main: dev.server404.deepdarkexpeditions.DeepDarkExpeditions
 api-version: '26.2'
 description: Sistema de expediciones rotativas Deep Dark
