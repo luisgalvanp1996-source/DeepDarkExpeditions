@@ -198,7 +198,8 @@ public final class MapManager {
                 errors
         );
 
-        if (bounds != null && zones.size() == REQUIRED_ZONES.size()) {
+        // Validar que las cinco zonas estén dentro del mapa.
+        if (bounds != null) {
 
             for (ZoneDefinition zone : zones.values()) {
 
@@ -208,6 +209,50 @@ public final class MapManager {
                                     + " está fuera de los límites del mapa."
                     );
                 }
+            }
+
+            // Validar puntos individuales.
+            validatePointInsideBounds(
+                    bounds,
+                    entry,
+                    "entry",
+                    errors
+            );
+
+            validatePointInsideBounds(
+                    bounds,
+                    finalChest,
+                    "final-chest",
+                    errors
+            );
+
+            validatePointInsideBounds(
+                    bounds,
+                    extraction,
+                    "extraction",
+                    errors
+            );
+
+            // Validar apariciones de Wardens.
+            for (int i = 0; i < wardenSpawns.size(); i++) {
+
+                validatePointInsideBounds(
+                        bounds,
+                        wardenSpawns.get(i),
+                        "warden-spawns[" + i + "]",
+                        errors
+                );
+            }
+
+            // Validar puntos seguros.
+            for (int i = 0; i < safeSpawns.size(); i++) {
+
+                validatePointInsideBounds(
+                        bounds,
+                        safeSpawns.get(i),
+                        "safe-spawns[" + i + "]",
+                        errors
+                );
             }
         }
 
@@ -238,6 +283,32 @@ public final class MapManager {
                 extraction,
                 safeSpawns
         );
+    }
+
+    /**
+     * Comprueba que un punto esté dentro de los límites del mapa.
+     */
+    private void validatePointInsideBounds(
+            Bounds bounds,
+            Point point,
+            String label,
+            List<String> errors
+    ) {
+
+        if (bounds == null || point == null) {
+            return;
+        }
+
+        if (!bounds.contains(point)) {
+            errors.add(
+                    "El punto " + label
+                            + " está fuera de los límites del mapa. "
+                            + "Coordenadas: "
+                            + point.x() + ", "
+                            + point.y() + ", "
+                            + point.z()
+            );
+        }
     }
 
     private List<Point> readPointCollection(
@@ -311,9 +382,9 @@ public final class MapManager {
             List<String> errors
     ) {
 
-        if (!isNumber(section, "x")
-                || !isNumber(section, "y")
-                || !isNumber(section, "z")) {
+        if (!isFiniteNumber(section, "x")
+                || !isFiniteNumber(section, "y")
+                || !isFiniteNumber(section, "z")) {
 
             errors.add(
                     "Coordenadas x, y, z inválidas en " + path + "."
@@ -324,6 +395,15 @@ public final class MapManager {
         double x = section.getDouble("x");
         double y = section.getDouble("y");
         double z = section.getDouble("z");
+
+        if (!isFiniteNumber(section, "yaw", true)
+                || !isFiniteNumber(section, "pitch", true)) {
+
+            errors.add(
+                    "Orientación yaw/pitch inválida en " + path + "."
+            );
+            return null;
+        }
 
         float yaw = (float) section.getDouble("yaw", 0.0);
         float pitch = (float) section.getDouble("pitch", 0.0);
@@ -372,10 +452,12 @@ public final class MapManager {
             return null;
         }
 
-        if (!isNumber(min, "x") || !isNumber(min, "y")
-                || !isNumber(min, "z")
-                || !isNumber(max, "x") || !isNumber(max, "y")
-                || !isNumber(max, "z")) {
+        if (!isIntegerNumber(min, "x")
+                || !isIntegerNumber(min, "y")
+                || !isIntegerNumber(min, "z")
+                || !isIntegerNumber(max, "x")
+                || !isIntegerNumber(max, "y")
+                || !isIntegerNumber(max, "z")) {
 
             errors.add(
                     "Coordenadas min/max inválidas en " + label + "."
@@ -406,11 +488,49 @@ public final class MapManager {
         return bounds;
     }
 
-    private boolean isNumber(
+    private boolean isFiniteNumber(
             ConfigurationSection section,
             String path
     ) {
-        return section.get(path) instanceof Number;
+        return isFiniteNumber(section, path, false);
+    }
+
+    private boolean isFiniteNumber(
+            ConfigurationSection section,
+            String path,
+            boolean optional
+    ) {
+
+        Object value = section.get(path);
+
+        if (value == null && optional) {
+            return true;
+        }
+
+        if (!(value instanceof Number number)) {
+            return false;
+        }
+
+        return Double.isFinite(number.doubleValue());
+    }
+
+    private boolean isIntegerNumber(
+            ConfigurationSection section,
+            String path
+    ) {
+
+        Object value = section.get(path);
+
+        if (!(value instanceof Number number)) {
+            return false;
+        }
+
+        double decimal = number.doubleValue();
+
+        return Double.isFinite(decimal)
+                && decimal == Math.floor(decimal)
+                && decimal >= Integer.MIN_VALUE
+                && decimal <= Integer.MAX_VALUE;
     }
 
     public MapDefinition getMap(String id) {
@@ -458,6 +578,15 @@ public final class MapManager {
                     && other.maxX() <= maxX
                     && other.maxY() <= maxY
                     && other.maxZ() <= maxZ;
+        }
+
+        public boolean contains(Point point) {
+            return point.x() >= minX
+                    && point.x() < (maxX + 1.0)
+                    && point.y() >= minY
+                    && point.y() < (maxY + 1.0)
+                    && point.z() >= minZ
+                    && point.z() < (maxZ + 1.0);
         }
     }
 

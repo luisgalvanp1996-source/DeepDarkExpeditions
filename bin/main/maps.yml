@@ -1,0 +1,64 @@
+
+maps:
+  test_map_01:
+    display-name: "Mapa de Prueba 01"
+    schematic: "test_map_01.schem"
+
+    bounds:
+      min: {x: -24, y: -60, z: -24}
+      max: {x: 23, y: 80, z: 23}
+
+    entry:
+      x: 0.5
+      y: 65.0
+      z: -20.5
+      yaw: 0.0
+      pitch: 0.0
+
+    zones:
+      outer_ruins:
+        bounds:
+          min: {x: -24, y: 40, z: -24}
+          max: {x: 23, y: 80, z: 23}
+
+      deep_galleries:
+        bounds:
+          min: {x: -20, y: 0, z: -20}
+          max: {x: 19, y: 39, z: 19}
+
+      forgotten_sanctuary:
+        bounds:
+          min: {x: -15, y: -20, z: -15}
+          max: {x: 14, y: -1, z: 14}
+
+      ancestral_chambers:
+        bounds:
+          min: {x: -10, y: -40, z: -10}
+          max: {x: 9, y: -21, z: 9}
+
+      abyss_heart:
+        bounds:
+          min: {x: -5, y: -60, z: -5}
+          max: {x: 4, y: -41, z: 4}
+
+    warden-spawns:
+      spawn_01:
+        x: 0.5
+        y: -20.0
+        z: 0.5
+
+    final-chest:
+      x: 0.5
+      y: -55.0
+      z: 0.5
+
+    extraction:
+      x: 0.5
+      y: -50.0
+      z: 0.5
+
+    safe-spawns:
+      spawn_01:
+        x: 0.5
+        y: 65.0
+        z: 0.5

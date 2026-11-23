@@ -36,7 +36,7 @@ portals:
   appearance:
     frame-material: SCULK
     interior-material: CYAN_STAINED_GLASS
-    particle: SCULK_SOUL
+    particle: SCULK_CHARGE
     particle-count: 24
 
   # Efectos al atravesar cualquiera de los portales
