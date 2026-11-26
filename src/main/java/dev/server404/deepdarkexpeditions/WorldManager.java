@@ -1,4 +1,3 @@
-
 package dev.server404.deepdarkexpeditions;
 
 import org.bukkit.Bukkit;
